@@ -1,0 +1,28 @@
+name: Build Minecraft Mod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: unzip professor-client-mod.zip -d project
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - run: chmod +x project/minecraft-mod/gradlew
+
+      - working-directory: project/minecraft-mod
+        run: ./gradlew build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Minecraft-Mod
+          path: project/minecraft-mod/build/libs/*.jar
